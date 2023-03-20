@@ -1,5 +1,5 @@
 import { Vector } from "@pinecone-database/pinecone"
-import { negativeVector } from "./negativeVectors"
+import { applyNegativeVectors } from "./applyNegativeVectors"
 
 const vec: Vector = {
   id: 'original',
@@ -16,5 +16,5 @@ const neg2: Vector = {
   values: [0.3, 0.7]
 }
 
-const negVec = negativeVector(vec, [neg1, neg2], 1.0)
+const negVec = applyNegativeVectors(vec, [neg1, neg2], 1.0)
 console.log(negVec)

@@ -49,12 +49,13 @@ const multiplyScalarToVector = (vector: Vector, scalar: number): Vector => {
 
 /**
  * Returns a vector that is a weighted combination of the query vector and the average of the negative vectors.
+ * Follows the formula: qModified = q + beta * (q - avg(negativeVectors))
  *
  * @param q The query vector
- * @param negativeVectors The negative vectors
+ * @param qModified The negative vectors
  * @param beta The weight of the query vector. Defaults to 1.0.
  */
-const negativeVector = (q: Vector, negativeVectors: Vector[], beta: number = 1.0): Vector => {
+const applyNegativeVectors = (q: Vector, negativeVectors: Vector[], beta: number = 1.0): Vector => {
   const avgNegVec: Vector = {
     id: 'avgNegVec',
     values: combineVectors(negativeVectors, (v1, v2) => v2 / negativeVectors.length).values
@@ -63,12 +64,10 @@ const negativeVector = (q: Vector, negativeVectors: Vector[], beta: number = 1.0
   const qMinusAvgNegVec = combineVectors([q, avgNegVec], (v1, v2) => v1 - v2);
   const betaTimesQMinusAvgNegVec = multiplyScalarToVector(qMinusAvgNegVec, beta);
 
-  const qModified: Vector = {
+  return {
     id: `${q.id}_modified`,
     values: combineVectors([q, betaTimesQMinusAvgNegVec], (v1, v2) => v1 + v2).values
   };
-
-  return qModified;
 };
 
-export { negativeVector }
+export { applyNegativeVectors }
